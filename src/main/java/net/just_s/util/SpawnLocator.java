@@ -1,6 +1,5 @@
 package net.just_s.util;
 
-import net.just_s.JSMT;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.world.ServerWorld;

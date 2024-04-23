@@ -3,7 +3,7 @@
 	"id": "jsmt",
 	"version": "${version}",
 	"name": "Just Spawn Me There",
-	"description": "This mod rewrites logic behind vanilla respawning system by fixing players respawning on top of the buildings.",
+	"description": "This mod rewrites logic behind vanilla respawning system, so players would not spawn on top of buildings.",
 	"authors": [
 		"Just_S"
 	],

@@ -54,6 +54,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                 this.setPosition(this.getX(), this.getY() + 1.0D, this.getZ());
             }
             ci.cancel();
+            return;
         }
 
         // We have to account for worldborder radius

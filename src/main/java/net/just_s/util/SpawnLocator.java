@@ -14,7 +14,7 @@ public class SpawnLocator {
     @Nullable
     public static BlockPos findOverworldSpawn(ServerWorld world, int x, int z, Shape shape) {
         // Starting on top of our shape
-        int i = world.getSpawnPos().getY() + JSMT.MS.getSpawnRadius(world);
+        int i = world.getSpawnPos().getY() + world.getServer().getSpawnRadius(world);
         // If starting point is already too low - skip (please don't respawn people in the void)
         if (i < world.getBottomY()) return null;
 
@@ -44,7 +44,7 @@ public class SpawnLocator {
      * */
     private static boolean isInArea(ServerWorld world, BlockPos pos, Shape shape) {
         BlockPos center = world.getSpawnPos();
-        int radius = JSMT.MS.getSpawnRadius(world);
+        int radius = world.getServer().getSpawnRadius(world);
 
         switch (shape) {
             case VANILLA -> {

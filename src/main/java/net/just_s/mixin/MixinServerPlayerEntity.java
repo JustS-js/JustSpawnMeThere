@@ -1,8 +1,6 @@
 package net.just_s.mixin;
 
 import com.mojang.authlib.GameProfile;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.just_s.JSMT;
 import net.just_s.util.Shape;
 import net.minecraft.entity.player.PlayerEntity;
@@ -110,7 +108,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
         JSMT.LOGGER.warn(
                 "Could not respawn player in specified area [SHAPE={}, CENTER={}, RADIUS={}].",
                 world.getGameRules().get(JSMT.SPAWN_SHAPE).get().name(),
-                worldSpawnPos,
+                worldSpawnPos.toShortString(),
                 server.getSpawnRadius(world)
         );
     }

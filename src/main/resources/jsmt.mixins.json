@@ -6,7 +6,6 @@
     "defaultRequire": 1
   },
   "server": [
-    "MixinServerPlayerEntity",
-    "MixinGameRuleCommand"
+    "MixinServerPlayerEntity"
   ]
 }

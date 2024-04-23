@@ -2,6 +2,7 @@ package net.just_s;
 
 import net.fabricmc.api.DedicatedServerModInitializer;
 
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
@@ -12,7 +13,7 @@ import net.minecraft.world.GameRules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JSMT implements DedicatedServerModInitializer {
+public class JSMT implements ModInitializer {
 	public static final String MODID = "jsmt";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 	public static MinecraftServer MS;
@@ -25,7 +26,7 @@ public class JSMT implements DedicatedServerModInitializer {
 			);
 
 	@Override
-	public void onInitializeServer() {
+	public void onInitialize() {
 		// Get server instance the moment is becomes available
 		ServerLifecycleEvents.SERVER_STARTED.register(
 				(server) -> MS = server

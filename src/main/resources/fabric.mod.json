@@ -15,15 +15,12 @@
 	"icon": "assets/jsmt/icon.png",
 	"environment": "server",
 	"entrypoints": {
-		"server": [
+		"main": [
 			"net.just_s.JSMT"
 		]
 	},
 	"mixins": [
-		{
-			"config": "jsmt.mixins.json",
-			"environment": "server"
-		}
+		"jsmt.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.15.9",

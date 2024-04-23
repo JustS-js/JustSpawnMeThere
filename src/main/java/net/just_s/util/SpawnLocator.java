@@ -58,7 +58,7 @@ public class SpawnLocator {
                         center.add(radius+1, radius+1, radius+1),
                         center.add(-radius, -radius, -radius)
                 );
-                return box.contains(pos.toCenterPos());
+                return box.contains(pos.getX(), pos.getY(), pos.getZ());
             }
         }
         return false;

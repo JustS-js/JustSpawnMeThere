@@ -25,7 +25,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     @Shadow @Final public MinecraftServer server;
 
     public MixinServerPlayerEntity(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
-        super(world, pos, yaw, gameProfile);
+        super(world, pos, yaw, gameProfile, null);
     }
 
     @Shadow protected abstract int calculateSpawnOffsetMultiplier(int horizontalSpawnArea);

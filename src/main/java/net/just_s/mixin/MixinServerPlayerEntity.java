@@ -106,7 +106,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
 
         // If we could not find place to respawn, let vanilla code do that for us.
         JSMT.LOGGER.warn(
-                "Could not respawn player in specified area [SHAPE={}, CENTER={}, RADIUS={}].",
+                "Could not respawn player in specified area [SHAPE={}; CENTER=({}); RADIUS={}].",
                 world.getGameRules().get(JSMT.SPAWN_SHAPE).get().name(),
                 worldSpawnPos.toShortString(),
                 server.getSpawnRadius(world)

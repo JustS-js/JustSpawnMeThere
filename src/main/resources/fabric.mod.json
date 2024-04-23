@@ -15,7 +15,7 @@
 	"icon": "assets/jsmt/icon.png",
 	"environment": "server",
 	"entrypoints": {
-		"main": [
+		"server": [
 			"net.just_s.JSMT"
 		]
 	},

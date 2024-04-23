@@ -102,6 +102,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                 this.refreshPositionAndAngles(spawnBlockPos, 0.0F, 0.0F);
                 if (world.isSpaceEmpty(this)) {
                     ci.cancel();
+                    return;
                 }
             }
         }

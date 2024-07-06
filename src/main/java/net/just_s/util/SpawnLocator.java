@@ -1,6 +1,5 @@
 package net.just_s.util;
 
-import net.just_s.JSMT;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.world.ServerWorld;
@@ -55,8 +54,8 @@ public class SpawnLocator {
             }
             case CUBE ->  {
                 Box box = new Box(
-                        center.add(radius+1, radius+1, radius+1),
-                        center.add(-radius, -radius, -radius)
+                        center.add(radius+1, radius+1, radius+1).toCenterPos(),
+                        center.add(-radius, -radius, -radius).toCenterPos()
                 );
                 return box.contains(pos.toCenterPos());
             }

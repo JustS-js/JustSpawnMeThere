@@ -3,22 +3,28 @@ package net.just_s.mixin;
 import com.mojang.authlib.GameProfile;
 import net.just_s.JSMT;
 import net.just_s.util.Shape;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.just_s.util.SpawnLocator;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.GameMode;
+import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class MixinServerPlayerEntity extends PlayerEntity {
@@ -30,12 +36,25 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
 
     @Shadow protected abstract int calculateSpawnOffsetMultiplier(int horizontalSpawnArea);
 
-    @Inject(method = "moveToSpawn", at = @At("HEAD"), cancellable = true)
-    private void jsmt$moveToSpawn(ServerWorld world, CallbackInfo ci) {
+    @Redirect(method = "getRespawnTarget", at = @At(value = "NEW", args = "class=net/minecraft/world/TeleportTarget", ordinal = 1))
+    private TeleportTarget jsmt$replaceTarget(ServerWorld world, Entity entity, TeleportTarget.PostDimensionTransition postDimensionTransition) {
+
+        return new TeleportTarget(
+                world,
+                entity.getWorldSpawnPos(world, world.getSpawnPos()).toBottomCenterPos(),
+                Vec3d.ZERO,
+                world.getSpawnAngle(),
+                0.0F,
+                postDimensionTransition
+        );
+    }
+
+    @Inject(method = "getWorldSpawnPos", at = @At("HEAD"), cancellable = true)
+    private void jsmt$moveToSpawn(ServerWorld world, BlockPos worldSpawnPos, CallbackInfoReturnable<BlockPos> cir) {
         // If spawn region shape is not modified - skip custom logic altogether
         if (world.getGameRules().get(JSMT.SPAWN_SHAPE).get() == Shape.VANILLA) return;
 
-        BlockPos worldSpawnPos = world.getSpawnPos();
+        Box box = this.getDimensions(EntityPose.STANDING).getBoxAt(Vec3d.ZERO);
         int radius = Math.max(0, server.getSpawnRadius(world));
         // if spawn radius is 0 or world is not Overworld or Server standard gamemode is Adventure
         // We should place player at exact location
@@ -44,16 +63,11 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                 !world.getDimension().hasSkyLight() ||
                 world.getServer().getSaveProperties().getGameMode() == GameMode.ADVENTURE
         ) {
-            this.refreshPositionAndAngles(worldSpawnPos, 0.0F, 0.0F);
-
-            if (!world.isSpaceEmpty(this)) {
+            if (!world.isSpaceEmpty(this, box.offset(worldSpawnPos.toBottomCenterPos()))) {
                 JSMT.LOGGER.warn("Could not respawn player on exact location.");
+                return;
             }
-
-            while(!world.isSpaceEmpty(this) && this.getY() < (double)(world.getTopY() - 1)) {
-                this.setPosition(this.getX(), this.getY() + 1.0D, this.getZ());
-            }
-            ci.cancel();
+            cir.setReturnValue(worldSpawnPos);
             return;
         }
 
@@ -96,12 +110,9 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                     world.getGameRules().get(JSMT.SPAWN_SHAPE).get()
             );
             // If safe position found - spawn player and ci.cancel() further code
-            if (spawnBlockPos != null) {
-                this.refreshPositionAndAngles(spawnBlockPos, 0.0F, 0.0F);
-                if (world.isSpaceEmpty(this)) {
-                    ci.cancel();
-                    return;
-                }
+            if (spawnBlockPos != null && world.isSpaceEmpty(this, box.offset(spawnBlockPos.toBottomCenterPos()))) {
+                cir.setReturnValue(spawnBlockPos);
+                return;
             }
         }
 

@@ -12,6 +12,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Set;
+
 @Mixin(TeleportTarget.class)
 public abstract class MixinTeleportTarget {
 
@@ -27,7 +29,7 @@ public abstract class MixinTeleportTarget {
     @Inject(method = "missingSpawnBlock", at = @At("HEAD"), cancellable = true)
     private static void jsmt$modifySpawnAngle(ServerWorld world, Entity entity, TeleportTarget.PostDimensionTransition postDimensionTransition, CallbackInfoReturnable<TeleportTarget> cir) {
         cir.setReturnValue(
-                new TeleportTarget(world, getWorldSpawnPos(world, entity), Vec3d.ZERO, world.getSpawnAngle(), 0.0F, true, postDimensionTransition)
+                new TeleportTarget(world, getWorldSpawnPos(world, entity), Vec3d.ZERO, world.getSpawnAngle(), 0.0F, true, false, Set.of(),  postDimensionTransition)
         );
     }
 }

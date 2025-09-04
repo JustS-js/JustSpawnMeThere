@@ -30,8 +30,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MixinServerPlayerEntity extends PlayerEntity {
     @Shadow @Final public MinecraftServer server;
 
-    public MixinServerPlayerEntity(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
-        super(world, pos, yaw, gameProfile);
+    public MixinServerPlayerEntity(World world, GameProfile profile) {
+        super(world, profile);
     }
 
     @Shadow protected abstract int calculateSpawnOffsetMultiplier(int horizontalSpawnArea);
